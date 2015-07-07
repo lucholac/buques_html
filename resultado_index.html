@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE HTML SYSTEM "about:legacy-compat">
+<html>
+	<head>
+		<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+		<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+		<link href="/happyhour2/bootstrap/css/bootstrap/bootstrap.css" type="text/css" rel="stylesheet"/>
+		<link href="/happyhour2/bootstrap/css/bootstrap/bootstrap-overrides.css" media="screen" type="text/css" rel="stylesheet"/>
+		<link href="/happyhour2/bootstrap/css/lib/jquery-ui-1.10.2.custom.css" type="text/css" rel="stylesheet"/>
+		<link href="/happyhour2/bootstrap/css/lib/font-awesome.css" media="screen" type="text/css" rel="stylesheet"/>
+		<link href="/happyhour2/bootstrap/css/compiled/layout.css" type="text/css" rel="stylesheet"/>
+		<link href="/happyhour2/bootstrap/css/compiled/elements.css" media="screen" type="text/css" rel="stylesheet"/>
+		<link href="/happyhour2/bootstrap/css/compiled/icons.css" media="screen" type="text/css" rel="stylesheet"/>
+		<link href="/happyhour2/bootstrap/css/compiled/index.css" type="text/css" rel="stylesheet"/>
+		<link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800"/>
+		<link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:300,400,700,900,300italic,400italic,700italic,900italic"/>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+		<script type="text/javascript" src="/happyhour2/bootstrap/js/bootstrap.min.js"> </script>
+		<script type="text/javascript" src="/happyhour2/bootstrap/js/jquery-ui-1.10.2.custom.min.js"> </script>
+		<script type="text/javascript" src="/happyhour2/bootstrap/js/jquery.knob.js"> </script>
+		<script type="text/javascript" src="/happyhour2/bootstrap/js/jquery.flot.js"> </script>
+		<script type="text/javascript" src="/happyhour2/bootstrap/js/jquery.flot.stack.js"> </script>
+		<script type="text/javascript" src="/happyhour2/bootstrap/js/jquery.flot.resize.js"> </script>
+		<script type="text/javascript" src="/happyhour2/bootstrap/js/theme.js"> </script>
+		<script type="text/javascript">
+        $(function () {
+
+            // jQuery Knobs
+            $(".knob").knob();
+
+
+
+            // jQuery UI Sliders
+            $(".slider-sample1").slider({
+                value: 100,
+                min: 1,
+                max: 500
+            });
+            $(".slider-sample2").slider({
+                range: "min",
+                value: 130,
+                min: 1,
+                max: 500
+            });
+            $(".slider-sample3").slider({
+                range: true,
+                min: 0,
+                max: 500,
+                values: [ 40, 170 ],
+            });
+
+            
+
+            // jQuery Flot Chart
+            var visits = [[1, 50], [2, 40], [3, 45], [4, 23],[5, 55],[6, 65],[7, 61],[8, 70],[9, 65],[10, 75],[11, 57],[12, 59]];
+            var visitors = [[1, 25], [2, 50], [3, 23], [4, 48],[5, 38],[6, 40],[7, 47],[8, 55],[9, 43],[10,50],[11,47],[12, 39]];
+
+            var plot = $.plot($("#statsChart"),
+                [ { data: visits, label: "Signups"},
+                 { data: visitors, label: "Visits" }], {
+                    series: {
+                        lines: { show: true,
+                                lineWidth: 1,
+                                fill: true, 
+                                fillColor: { colors: [ { opacity: 0.1 }, { opacity: 0.13 } ] }
+                             },
+                        points: { show: true, 
+                                 lineWidth: 2,
+                                 radius: 3
+                             },
+                        shadowSize: 0,
+                        stack: true
+                    },
+                    grid: { hoverable: true, 
+                           clickable: true, 
+                           tickColor: "#f9f9f9",
+                           borderWidth: 0
+                        },
+                    legend: {
+                            // show: false
+                            labelBoxBorderColor: "#fff"
+                        },  
+                    colors: ["#a7b5c5", "#30a0eb"],
+                    xaxis: {
+                        ticks: [[1, "JAN"], [2, "FEB"], [3, "MAR"], [4,"APR"], [5,"MAY"], [6,"JUN"], 
+                               [7,"JUL"], [8,"AUG"], [9,"SEP"], [10,"OCT"], [11,"NOV"], [12,"DEC"]],
+                        font: {
+                            size: 12,
+                            family: "Open Sans, Arial",
+                            variant: "small-caps",
+                            color: "#697695"
+                        }
+                    },
+                    yaxis: {
+                        ticks:3, 
+                        tickDecimals: 0,
+                        font: {size:12, color: "#9da3a9"}
+                    }
+                 });
+
+            function showTooltip(x, y, contents) {
+                $('<div id="tooltip">' + contents + '</div>').css( {
+                    position: 'absolute',
+                    display: 'none',
+                    top: y - 30,
+                    left: x - 50,
+                    color: "#fff",
+                    padding: '2px 5px',
+                    'border-radius': '6px',
+                    'background-color': '#000',
+                    opacity: 0.80
+                }).appendTo("body").fadeIn(200);
+            }
+
+            var previousPoint = null;
+            $("#statsChart").bind("plothover", function (event, pos, item) {
+                if (item) {
+                    if (previousPoint != item.dataIndex) {
+                        previousPoint = item.dataIndex;
+
+                        $("#tooltip").remove();
+                        var x = item.datapoint[0].toFixed(0),
+                            y = item.datapoint[1].toFixed(0);
+
+                        var month = item.series.xaxis.ticks[item.dataIndex].label;
+
+                        showTooltip(item.pageX, item.pageY,
+                                    item.series.label + " of " + month + ": " + y);
+                    }
+                }
+                else {
+                    $("#tooltip").remove();
+                    previousPoint = null;
+                }
+            });
+        });
+    </script>
+	</head>
+	<body>
+		<div id="wrapper">
+			<div version="2.0" id="menu">
+				<div id="sidebar-nav">
+					<ul id="dashboard-menu">
+						<li><a href="index.html"><i class="icon-home"/><span>Home</span></a></li>
+					</ul>
+				</div>
+			</div>
+			<div id="main"><div version="2.0"><div class="content"><div class="skins-nav"><a class="skin first_nav selected" href="#"><span class="icon"/><span class="text">Default skin</span></a><a data-file="css/compiled/skins/dark.css" class="skin second_nav" href="#"><span class="icon"/><span class="text">Dark skin</span></a></div><div id="main-stats"><div class="row stats-row"><div class="col-md-3 col-sm-3 stat"><div class="data"><span class="number">2457</span>
+                        visits
+                    </div><span class="date">Today</span></div><div class="col-md-3 col-sm-3 stat"><div class="data"><span class="number">3240</span>
+                        users
+                    </div><span class="date">February 2013</span></div><div class="col-md-3 col-sm-3 stat"><div class="data"><span class="number">322</span>
+                        orders
+                    </div><span class="date">This week</span></div><div class="col-md-3 col-sm-3 stat last"><div class="data"><span class="number">$2,340</span>
+                        sales
+                    </div><span class="date">last 30 days</span></div></div></div><div id="pad-wrapper"><div class="row chart"><div class="col-md-12"><h4 class="clearfix pull-left">
+                        Statistics                         
+                    </h4><div class="btn-group pull-right"><button class="glow left">DAY</button><button class="glow middle active">MONTH</button><button class="glow right">YEAR</button></div></div><div class="col-md-12"><div id="statsChart" style="padding: 0px; position: relative;"><canvas class="flot-base" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 1305px; height: 250px;" width="1305" height="250"/><div class="flot-text flot-y-axis flot-y1-axis yAxis y1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;"><div style="position: absolute; top: 219px; font: 400 12px &#034;Open Sans&#034;,sans-serif; color: rgb(157, 163, 169); left: 14px;">0</div><div style="position: absolute; top: 146px; font: 400 12px &#034;Open Sans&#034;,sans-serif; color: rgb(157, 163, 169); left: 7px;">50</div><div style="position: absolute; top: 73px; font: 400 12px &#034;Open Sans&#034;,sans-serif; color: rgb(157, 163, 169); left: 0px;">100</div><div style="position: absolute; top: 0px; font: 400 12px &#034;Open Sans&#034;,sans-serif; color: rgb(157, 163, 169); left: 0px;">150</div></div><div class="flot-text flot-x-axis flot-x1-axis xAxis x1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;"><div style="position: absolute; top: 233px; font: small-caps 400 12px Open Sans,Arial; color: rgb(105, 118, 149); left: 16px;">JAN</div><div style="position: absolute; top: 233px; font: small-caps 400 12px Open Sans,Arial; color: rgb(105, 118, 149); left: 130px;">FEB</div><div style="position: absolute; top: 233px; font: small-caps 400 12px Open Sans,Arial; color: rgb(105, 118, 149); left: 243px;">MAR</div><div style="position: absolute; top: 233px; font: small-caps 400 12px Open Sans,Arial; color: rgb(105, 118, 149); left: 360px;">APR</div><div style="position: absolute; top: 233px; font: small-caps 400 12px Open Sans,Arial; color: rgb(105, 118, 149); left: 473px;">MAY</div><div style="position: absolute; top: 233px; font: small-caps 400 12px Open Sans,Arial; color: rgb(105, 118, 149); left: 590px;">JUN</div><div style="position: absolute; top: 233px; font: small-caps 400 12px Open Sans,Arial; color: rgb(105, 118, 149); left: 707px;">JUL</div><div style="position: absolute; top: 233px; font: small-caps 400 12px Open Sans,Arial; color: rgb(105, 118, 149); left: 819px;">AUG</div><div style="position: absolute; top: 233px; font: small-caps 400 12px Open Sans,Arial; color: rgb(105, 118, 149); left: 936px;">SEP</div><div style="position: absolute; top: 233px; font: small-caps 400 12px Open Sans,Arial; color: rgb(105, 118, 149); left: 1049px;">OCT</div><div style="position: absolute; top: 233px; font: small-caps 400 12px Open Sans,Arial; color: rgb(105, 118, 149); left: 1163px;">NOV</div><div style="position: absolute; top: 233px; font: small-caps 400 12px Open Sans,Arial; color: rgb(105, 118, 149); left: 1280px;">DEC</div></div><canvas class="flot-overlay" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 1305px; height: 250px;" width="1305" height="250"/><div class="legend"><div style="position: absolute; width: 62px; height: 38px; top: 14px; right: 18px; background-color: rgb(255, 255, 255); opacity: 0.85;"/><table style="position:absolute;top:14px;right:18px;;font-size:smaller;color:#545454"><tbody><tr><td class="legendColorBox"><div style="border:1px solid #fff;padding:1px"><div style="width:4px;height:0;border:5px solid rgb(167,181,197);overflow:hidden"/></div></td><td class="legendLabel">Signups</td></tr><tr><td class="legendColorBox"><div style="border:1px solid #fff;padding:1px"><div style="width:4px;height:0;border:5px solid rgb(48,160,235);overflow:hidden"/></div></td><td class="legendLabel">Visits</td></tr></tbody></table></div></div></div></div><div class="row section ui-elements"><div class="col-md-12"><h4>UI Elements</h4></div><div class="col-md-5 knobs"><div class="knob-wrapper"><div style="display:inline;width:150px;height:200px;"><canvas height="200px" width="150"/><input type="text" data-width="150" data-bgcolor="#d4ecfd" data-fgcolor="#30a1ec" data-inputcolor="#333" data-thickness=".3" class="knob" value="50" style="width: 79px; height: 50px; position: absolute; vertical-align: middle; margin-top: 50px; margin-left: -114px; border: 0px none; background: none repeat scroll 0% 0% transparent; font: bold 30px Arial; text-align: center; color: rgb(51, 51, 51); padding: 0px;"/></div><div class="info"><div class="param"><span class="line blue"/>
+                                Active users
+                            </div></div></div><div class="knob-wrapper"><div style="display:inline;width:150px;height:200px;"><canvas height="200px" width="150"/><input type="text" data-width="150" data-bgcolor="#d4ecfd" data-fgcolor="#3d88ba" data-inputcolor="#333" data-thickness=".3" class="knob second" value="75" style="width: 79px; height: 50px; position: absolute; vertical-align: middle; margin-top: 50px; margin-left: -114px; border: 0px none; background: none repeat scroll 0% 0% transparent; font: bold 30px Arial; text-align: center; color: rgb(51, 51, 51); padding: 0px;"/></div><div class="info"><div class="param"><span class="line blue"/>
+                                % disk space usage
+                            </div></div></div></div><div class="col-md-6 showcase"><div class="ui-sliders"><div class="slider slider-sample1 vertical-handler ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" aria-disabled="false"><a href="#" class="ui-slider-handle ui-state-default ui-corner-all" style="left: 19.8397%;"/></div><div class="slider slider-sample2 ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" aria-disabled="false"><div class="ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min" style="width: 25.8517%;"/><a href="#" class="ui-slider-handle ui-state-default ui-corner-all" style="left: 25.8517%;"/></div><div class="slider slider-sample3 ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" aria-disabled="false"><div class="ui-slider-range ui-widget-header ui-corner-all" style="left: 8%; width: 26%;"/><a href="#" class="ui-slider-handle ui-state-default ui-corner-all" style="left: 8%;"/><a href="#" class="ui-slider-handle ui-state-default ui-corner-all" style="left: 34%;"/></div></div><div class="ui-group"><a class="btn-flat inverse">Large Button</a><a class="btn-flat gray">Large Button</a><a class="btn-flat default">Large Button</a><a class="btn-flat primary">Large Button</a></div><div class="ui-group"><a class="btn-flat icon"><i class="tool"/> Icon button
+                        </a><a class="btn-glow small inverse"><i class="shuffle"/></a><a class="btn-glow small primary"><i class="setting"/></a><a class="btn-glow small default"><i class="attach"/></a><div class="ui-select"><select><option selected="">Dropdown</option><option>Custom selects</option><option>Pure css styles</option></select></div><div class="btn-group"><button class="glow left">LEFT</button><button class="glow right">RIGHT</button></div></div></div></div><div class="table-products section"><div class="row head"><div class="col-md-12"><h4>Products <small>Table sample</small></h4></div></div><div class="row filter-block"><div class="col-md-8 col-md-offset-5"><div class="ui-select"><select><option>Filter users</option><option>Signed last 30 days</option><option>Active users</option></select></div><input type="text" class="search"/><a class="btn-flat new-product">+ Add product</a></div></div><div class="row"><table class="table table-hover"><thead><tr><th class="col-md-3"><input type="checkbox"/>
+                                    Product
+                                </th><th class="col-md-3"><span class="line"/>Description
+                                </th><th class="col-md-3"><span class="line"/>Status
+                                </th></tr></thead><tbody><tr class="first"><td><input type="checkbox"/><div class="img"></div><a href="#">There are many variations </a></td><td class="description">
+                                    if you are going to use a passage of Lorem Ipsum.
+                                </td><td><span class="label label-success">Active</span><ul class="actions"><li><i class="table-edit"/></li><li><i class="table-settings"/></li><li class="last"><i class="table-delete"/></li></ul></td></tr><tr><td><input type="checkbox"/><div class="img"></div><a href="#">Internet tend</a></td><td class="description">
+                                    There are many variations of passages.
+                                </td><td><ul class="actions"><li><i class="table-edit"/></li><li><i class="table-settings"/></li><li class="last"><i class="table-delete"/></li></ul></td></tr><tr><td><input type="checkbox"/><div class="img"></div><a href="#">Many desktop publishing </a></td><td class="description">
+                                    if you are going to use a passage of Lorem Ipsum.
+                                </td><td><ul class="actions"><li><i class="table-edit"/></li><li><i class="table-settings"/></li><li class="last"><i class="table-delete"/></li></ul></td></tr><tr><td><input type="checkbox"/><div class="img"></div><a href="#">Generate Lorem </a></td><td class="description">
+                                    There are many variations of passages.
+                                </td><td><span class="label label-info">Standby</span><ul class="actions"><li><i class="table-edit"/></li><li><i class="table-settings"/></li><li class="last"><i class="table-delete"/></li></ul></td></tr><tr><td><input type="checkbox"/><div class="img"></div><a href="#">Internet tend</a></td><td class="description">
+                                    There are many variations of passages.
+                                </td><td><ul class="actions"><li><i class="table-edit"/></li><li><i class="table-settings"/></li><li class="last"><i class="table-delete"/></li></ul></td></tr></tbody></table></div><ul class="pagination"><li><a href="#">Â«</a></li><li class="active"><a href="#">1</a></li><li><a href="#">2</a></li><li><a href="#">3</a></li><li><a href="#">4</a></li><li><a href="#">Â»</a></li></ul></div></div></div></div></div></div></body></html>
